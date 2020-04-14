@@ -13,7 +13,7 @@ prev_page:
 next_page:
   url: /04/06_preprocessing.html
 suffix: .ipynb
-search: model set hyper param models crossvalidate html code pipeline sklearn functions parameters x y github might type grid optimal its class should randomstate scoring per compare groupkfold timeseriessplit obs group predicting sequence resources scikit learn org stable jakevdp io pythondatasciencehandbook random forests rough n essentials page just quick hit living document not meant walkthrough clearly modifications additions suggestions truly welcomed smattering key thoughts talked explicitly included below documentation before xtrain xtest ytrain ytest traintestsplit trainsize cv covered extensively here com ledatascifi lectures spr blob master assignmentdata lworksheet ipynb optimizing specific gridsearchcv randomizedsearchcv last lecture pass different looping confusionmatrix classificationreport fold
+search: model set hyper param models crossvalidate html code pipeline sklearn functions parameters x y github predicting might type grid optimal its class should randomstate scoring per compare groupkfold timeseriessplit obs group sequence resources scikit learn org stable jakevdp io pythondatasciencehandbook random forests rough n essentials page just quick hit living document not meant walkthrough clearly modifications additions suggestions truly welcomed smattering key skills talked explicitly included below documentation before xtrain xtest ytrain ytest traintestsplit trainsize cv covered extensively here com ledatascifi lectures spr blob master assignmentdata lworksheet ipynb optimizing specific gridsearchcv randomizedsearchcv last lecture pass different looping post diagnostics classification
 
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -37,15 +37,17 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This page is just a quick-hit of <code>sklearn</code> and is a living document. It's not meant as a walkthrough. (Clearly!)</p>
 <p>Modifications, additions, and suggestions are truly welcomed!</p>
-<p>A smattering of key <code>sklearn</code> functions and thoughts. Parameters we talked about in class are explicitly included below, but you should look at the documentation to see the parameters for all functions before you use them!</p>
+<p>A smattering of key <code>sklearn</code> functions and skills. Parameters we talked about in class are explicitly included below, but you should look at the documentation to see the parameters for all functions before you use them!</p>
 <ul>
 <li><code>Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, random_state=&lt;#&gt;,train_size=&lt;%&gt;)</code></li>
 <li><code>cross_validate(model,X,y,cv,scoring)</code> covered extensively in class <a href="https://github.com/LeDataSciFi/lectures-spr2020/blob/master/assignment_data/L20%20worksheet.ipynb">here</a></li>
 <li>Optimizing the parameters of a specific model: <code>GridSearchCV</code>, or <code>RandomizedSearchCV</code> </li>
 <li>Scoring functions per last lecture and how to pass to <code>cross_validate</code></li>
 <li>How to compare different models by looping over them with <code>cross_validate</code></li>
-<li><code>confusion_matrix</code> </li>
-<li><code>classification_report</code> </li>
+<li>Post model diagnostics: <ul>
+<li>Predicting a classification: <code>confusion_matrix</code> and <code>classification_report</code> </li>
+</ul>
+</li>
 <li>Fold generators: <code>KFold</code>, <code>StratifiedKFold</code>, <code>GroupKFold</code>, <code>TimeSeriesSplit</code><ul>
 <li>Stratified is probably better when proportions are lop-sided</li>
 <li>Do you have multiple obs per "group" (a firm, person, etc.) and want to ensure no group is in both training and testing? <code>GroupKFold</code>    </li>
@@ -53,7 +55,10 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <li>Is time an important parameter! E.g. are you predicting stock prices? <code>TimeSeriesSplit</code></li>
 </ul>
 </li>
-<li><code>make_pipeline</code> for chaining steps in an estimation sequence </li>
+<li><code>make_pipeline</code> for chaining steps in an estimation sequence <ul>
+<li><code>ColumnTransformer</code> for simultaneously processing categorical, text, and continuous variables.</li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -132,17 +137,22 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span> <span class="c1"># this is one way to generate folds</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
 
 <span class="c1"># metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">classification_report</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 
 <span class="c1"># preprocessing and feature extraction</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_extraction</span> <span class="kn">import</span> <span class="n">DictVectorizer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction</span> <span class="kn">import</span> <span class="n">DictVectorizer</span>
 <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
 
 <span class="c1"># feature selection</span>

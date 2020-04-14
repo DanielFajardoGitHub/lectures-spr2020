@@ -6,33 +6,33 @@ kernel_name: python3
 kernel_path: content/04
 has_widgets: false
 title: |-
-  Preprocessing and the Cardinal Sin
+  Preprocessing, The Cardinal Sin, and Pipes
 pagenum: 26
 prev_page:
   url: /04/05_sklearn.html
 next_page:
   url: 
 suffix: .ipynb
-search: data model html sklearn missing x variables learn org scikit models training github values mean might stable transform preprocessing imputation io regression modules imp standardization variance categorical apply should before turn jakevdp pythondatasciencehandbook test xtest y pipeline improve transformations testing leakage applied using pipelines variable into vars instead feature pandas good examples impute fit xtrain means sample scaling features predict crossvalidate default walkthroughs after lecture continuous shouldnt info dataset predictions depending dictvectorizer string usable numeric onehotencoder takes array inputs dicts lets example pdsh engineering cant dealing com pdf quite too modeling observations any explicitly right project combination mechanics fittransform documentation
+search: data x training model y html missing sklearn test transform variables mean learn values org scikit sample models pipelines github might stable predict code center b preprocessing after imputation io regression modules imp standardization variance categorical apply leakage should before using project turn into instead jakevdp pythondatasciencehandbook examples xtest here next pipeline improve transformations testing dataset while applied any real world ml variable vars example feature pandas good observations impute fit xtrain means scaling features crossvalidate stock br above month set prediction default walkthroughs cardinal sin pipes lecture continuous shouldnt info seeing future predictions depending dictvectorizer string usable numeric onehotencoder
 
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
     <main class="jupyter-page">
-    <div id="page-info"><div id="page-title">Preprocessing and the Cardinal Sin</div>
+    <div id="page-info"><div id="page-title">Preprocessing, The Cardinal Sin, and Pipes</div>
 </div>
     <div class="jb_cell">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Preprocessing">Preprocessing<a class="anchor-link" href="#Preprocessing"> </a></h1><h2 id="After-this-lecture,-you">After this lecture, you<a class="anchor-link" href="#After-this-lecture,-you"> </a></h2><ul>
+<h1 id="Preprocessing,-The-Cardinal-Sin,-and-Pipes">Preprocessing, The Cardinal Sin, and Pipes<a class="anchor-link" href="#Preprocessing,-The-Cardinal-Sin,-and-Pipes"> </a></h1><h2 id="After-this-lecture,-you">After this lecture, you<a class="anchor-link" href="#After-this-lecture,-you"> </a></h2><ul>
 <li>Can prepare categorical variables for <code>sklearn</code> models</li>
 <li>Know that different imputation strategies exists and can use them</li>
 <li>Know that standardizing continuous variables can improve your models</li>
-<li>Know that you shouldn't apply preprocessing transformations with info from the testing dataset, that's called "data leakage" and is akin to letting your model "seeing the future" while training</li>
+<li><strong>Know that you shouldn't apply preprocessing transformations with info from the testing dataset, that's called "data leakage" and is akin to letting your model "seeing the future" while training</strong></li>
 <li>Know that you should apply the <strong>exact</strong> transformations to the testing data that you applied to the training data before making predictions</li>
 </ul>
-<p>All of these can be accomplished by using <code>pipelines</code>.</p>
+<p>All of these can be accomplished by using <code>pipelines</code>. <strong>Pipelines are a crucial ingredient for any viable real-world ML project.</strong></p>
 <h2 id="Preprocessing-categorical-variables">Preprocessing categorical variables<a class="anchor-link" href="#Preprocessing-categorical-variables"> </a></h2><p>Depending on the variable you have, you can turn to</p>
 <ul>
 <li><code>DictVectorizer</code> is how you turn string categorical variables into usable numeric vars</li>
@@ -343,6 +343,7 @@ Reg coefs:
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># a very simple example</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
                     <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
                     <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]])</span>
@@ -404,7 +405,7 @@ Reg coefs:
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Data-leakage:">Data leakage:<a class="anchor-link" href="#Data-leakage:"> </a></h2><p>Now you know how to transform your data before training a model. You might be tempted to do something like:</p>
+<h2 id="The-Cardinal-Sin-of-ML:-Data-leakage">The Cardinal Sin of ML: Data leakage<a class="anchor-link" href="#The-Cardinal-Sin-of-ML:-Data-leakage"> </a></h2><p>Now you know how to transform your data before training a model. You might be tempted to do something like:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="c1">#a bunch of sklearn stuff</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="c1">#load data</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1"># imputation, encode cat vars, standardize</span>
@@ -431,6 +432,96 @@ Reg coefs:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The problem here is that <code>transform(X)</code> used info from the <strong>ENTIRE</strong> dataset, including observations that ended up in <code>Xtest</code>!</p>
 <p><strong>This means that your cross-validation scores are unreliable.</strong> They will be at the very least overoptimistic, and in some cases, result in models that are down-right completely invalid.</p>
+<hr>
+<h3 id="An-illustrative-aside">An illustrative aside<a class="anchor-link" href="#An-illustrative-aside"> </a></h3><p>Here is a tiny example of that code in action. Suppose that the dataset has three observations, where X is time, and y is a stock price:</p>
+<p><br> <center> <b> RAW DATA</b> </center></p>
+<table>
+<thead><tr>
+<th style="text-align:left">X</th>
+<th style="text-align:left">y</th>
+<th style="text-align:left">sample</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">training</td>
+</tr>
+<tr>
+<td style="text-align:left">nan</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">training</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">test</td>
+</tr>
+</tbody>
+</table>
+<p>Suppose <code>transform(X)</code> computes the mean of X and fills in missing values with that. So it figures out that the mean of X is 2 and fills it in. (Remember: Your code above calls <code>transform</code> on all of the data, including the test subsample!) So you have, after running <code>transform(X)</code>:</p>
+<p><br> <center> <b> AFTER <code>transform(X)</code>, using the code above </b> </center></p>
+<table>
+<thead><tr>
+<th style="text-align:left">X</th>
+<th style="text-align:left">y</th>
+<th style="text-align:left">sample</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">training</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>2</strong></td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">training</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">3</td>
+<td style="text-align:left">test</td>
+</tr>
+</tbody>
+</table>
+<p>Now, you split the data up into training and test datasets, and in the training data, you estimate that $y=x$ (a 45 degree line). Thus, you load the test data, see that $X=3$, and predict $Y=3$ and viola! A perfect model!</p>
+<p><strong>HOWEVER.</strong> The test sample is supposed to be data you do not have access to while training the model. E.g. in a  real-world project trying to predict stock prices, $X=3$ occurs next month, so you could have never filled in the value with 2, because you never see $X=3$ while training. Instead, you probably would have filled in $X=1$, the average in the training set, as a best guess:</p>
+<p><br> <center> <b> REAL WORLD DATA AFTER <code>transform(X)</code> WITHOUT SEEING THE FUTURE </b> </center></p>
+<table>
+<thead><tr>
+<th style="text-align:left">X</th>
+<th style="text-align:left">y</th>
+<th style="text-align:left">sample</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">training</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>1</strong></td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">training</td>
+</tr>
+</tbody>
+</table>
+<p>So, this data would led you to conclude that $y=1.5*x$. Thus, when next month arrives, $X=3$, you predict $y=4.5$, and your prediction model is much less accurate than the code above would suggest.</p>
+<hr>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="The-absolute-golden-rule-of-prediction-modeling-is...">The absolute golden rule of prediction modeling is...<a class="anchor-link" href="#The-absolute-golden-rule-of-prediction-modeling-is..."> </a></h3><p><strong>YOUR MODEL CAN'T HAVE ACCESS TO ANY DATA THAT IT WOULDN'T HAVE IN PRACTICE WHEN IT MAKES THE PREDICTION.</strong></p>
 <p>I know I already said that, and repetition is usually bad writing, but it must be said again. And again.</p>
 <h3 id="Data-leakage-can-be-tricky">Data leakage can be tricky<a class="anchor-link" href="#Data-leakage-can-be-tricky"> </a></h3><p>Here are some more examples:</p>
@@ -450,27 +541,19 @@ Reg coefs:
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="The-solution,-or:-Safety-first,-via-Pipelines">The solution, or: Safety first, via Pipelines<a class="anchor-link" href="#The-solution,-or:-Safety-first,-via-Pipelines"> </a></h2><ol>
+<h2 id="The-solution,-or:-Safety-first,-via-Pipelines">The solution, or: Safety first, via Pipelines<a class="anchor-link" href="#The-solution,-or:-Safety-first,-via-Pipelines"> </a></h2><p><strong>Avoiding Data Leakage:</strong></p>
+<ol>
 <li>Be very familiar with the data and how it was collected and built </li>
 <li>Do your data prep within CV folds</li>
 </ol>
-<p>The second part of the solution is <a href="https://scikit-learn.org/stable/modules/compose.html">relatively easy to implement in <code>sklearn</code>: PIPES</a>!</p>
+<p>#2 is <a href="https://scikit-learn.org/stable/modules/compose.html"><em>relatively</em> easy to implement in <code>sklearn</code>: USE PIPES</a>!</p>
 <ul>
 <li>Pipelines make apply all steps to the data they receive</li>
 <li>In <code>cross_validate</code>'s training fold, the entire pipeline is applied to the training data</li>
 <li>In <code>cross_validate</code>'s testing fold, the saved transformations and model fits are applied to the test data</li>
+<li>We will talk about pipelines for the next two lectures, so set expectations for yourself, work through all the examples, and try to follow the conceptual steps.</li>
 </ul>
-<p>Examples and walkthroughs:</p>
-<ul>
-<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html">PDSH has an example of imputing, creating polynomial features, then fitting a regression in one line</a><ul>
-<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html">Another walkthrough with a pipeline</a></li>
-<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html">A pipeline used to optimize model parameters</a></li>
-</ul>
-</li>
-<li><a href="https://scikit-learn.org/stable/modules/compose.html">sklearn doc with details</a></li>
-<li><a href="https://scikit-learn.org/stable/tutorial/statistical_inference/putting_together.html">sklearn doc with two walkthroughs</a>, these walkthroughs use a pipeline to optimize a model's parameters</li>
-</ul>
-<p>Let's follow quickly this walkthrough on <a href="https://chrisalbon.com/machine_learning/model_evaluation/cross_validation_pipeline/">scaling the iris data and building a classification model</a></p>
+<p>Today, let's quickly get our first pipe set up by following this walkthrough on <a href="https://chrisalbon.com/machine_learning/model_evaluation/cross_validation_pipeline/">scaling the iris data and building a classification model</a></p>
 
 </div>
 </div>
@@ -516,8 +599,8 @@ Reg coefs:
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;fit_time&#39;: array([0.00099707, 0.00099754, 0.        , 0.0009973 , 0.        ]),
- &#39;score_time&#39;: array([0.00099659, 0.        , 0.00099778, 0.        , 0.0009973 ]),
+<pre>{&#39;fit_time&#39;: array([0.00099659, 0.00099683, 0.00099683, 0.00099778, 0.00199175]),
+ &#39;score_time&#39;: array([0.        , 0.        , 0.        , 0.00099707, 0.        ]),
  &#39;test_score&#39;: array([0.96666667, 0.96666667, 0.96666667, 0.93333333, 1.        ])}</pre>
 </div>
 
@@ -526,6 +609,27 @@ Reg coefs:
 </div>
 </div>
 
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>More on pipelines next class.</p>
+<p>Here are some resources - Examples and walkthroughs:</p>
+<ul>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html">PDSH has an example of imputing, creating polynomial features, then fitting a regression in one line</a><ul>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html">Another walkthrough with a pipeline</a></li>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html">A pipeline used to optimize model parameters</a></li>
+</ul>
+</li>
+<li><a href="https://scikit-learn.org/stable/modules/compose.html">sklearn doc with details</a></li>
+<li><a href="https://scikit-learn.org/stable/tutorial/statistical_inference/putting_together.html">sklearn doc with two walkthroughs</a>, these walkthroughs use a pipeline to optimize a model's parameters</li>
+</ul>
+
+</div>
+</div>
 </div>
 </div>
 

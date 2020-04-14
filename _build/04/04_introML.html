@@ -13,7 +13,7 @@ prev_page:
 next_page:
   url: /04/05_sklearn.html
 suffix: .ipynb
-search: model training data validation set sample models variance bias error html holdout org pythondatasciencehandbook test true positive learning style ds jakevdp github io false px into e feature variables text adding tr td fraction process src flowchart width ml selection should estimate its usually our too b engineering fit rate positives negative negatives machine png accuracy tradeoff align reduce might need cross cv split k work steps g risk noise wikipedia www textbook features dataset not reduces complexity problem table evaluation here step smaller repeat aka recall precision labels svg think index examples intro lets those tasks tend prediction detection
+search: model training data validation set sample models variance bias error html holdout org pythondatasciencehandbook test true positive style ds jakevdp github io false learning px ml into e feature variables text adding our tr td fraction process src flowchart width selection should estimate usually reduce too b engineering fit rate positives negative negatives machine png accuracy tradeoff align might need its cross cv split k work steps g learn risk noise wikipedia www textbook def features dataset not complexity problem table evaluation here step smaller repeat aka recall precision labels svg think index examples intro lets those tasks tend prediction
 
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -53,28 +53,30 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <li>Prediction accuracy (e.g. of the label or the group detection) </li>
 <li>Feature selection (which X variables and non-linearities should be in the model)</li>
 </ul>
-<p>And for both of those, the idea is that what the model learns will work <strong>out-of-sample</strong>. This focus on learning something that generalizes outside of the data we have is key to understanding most of the choices you make in a ML project.</p>
-<p>Econometrically, the goal is to estimate a model on a sample (the data we have) that works on the population (all of the data that the process can and will generate).</p>
+<p>And for both of those, the idea is that what the model learns will work <strong>out-of-sample</strong>.</p>
+<p><strong>The key to understanding most of the choices you make in a ML project is to remember:</strong> The focus of ML is to learn something that generalizes <em><strong>outside of the data we have already!</strong></em></p>
+<p>Econometrically, the goal is to estimate a model on a sample (the data we have) that works on the population (all of the data that can and will be generated).</p>
 <h3 id="The-bias-variance-tradeoff">The bias-variance tradeoff<a class="anchor-link" href="#The-bias-variance-tradeoff"> </a></h3><p>It turns out we can decompose the expected error of <em>a model</em> like this:</p>
 \begin{align}
 E[\text{model error risk}] = \text{model bias}^2+\text{model variance}+\text{noise}
-\end{align}<p>_(If you want to see the derviation of this, you can go to the <a href="https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">wiki page</a> or <a href="https://www.textbook.ds100.org/ch/15/bias_modeling.html">DS100</a>. The former's notation is a little simpler but the latter is more helpful with intuition)_</p>
+\end{align}<p>_(If you want to see the derivation of this, you can go to the <a href="https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">wiki page</a> or <a href="https://www.textbook.ds100.org/ch/15/bias_modeling.html">DS100</a>. The former's notation is a little simpler but the latter is more helpful with intuition)_</p>
 <p><strong>"Model bias"</strong></p>
 <ul>
 <li><strong>Def: Is errors stemming from the model's assumptions in how it predicts the outcome variable</strong></li>
-<li>It's the opposite of model accuracy</li>
+<li>It is the opposite of model accuracy</li>
 <li>Adding more variables or polynomial transformations of existing variables will usually reduce bias </li>
 <li>Removing features will usually increase bias</li>
-<li>Adding more data to the training dataset can (but might not) reduce variance</li>
+<li>Adding more data to the training dataset can (but might not) reduce bias</li>
 </ul>
 <p><strong>"Model variance"</strong></p>
 <ul>
 <li><strong>Def: Is extent to which estimated model varies from sample to sample</strong></li>
 <li>Adding more a new parameter (variables, etc) will usually increase model variance</li>
-<li>Adding more data to the training dataset will reduces variance</li>
+<li>Adding more data to the training dataset will reduce variance</li>
 </ul>
-<p><strong>Decreasing Noise</strong></p>
+<p><strong>Noise</strong></p>
 <ul>
+<li><strong>Def: Randomness in the data generating process beyond our understanding</strong></li>
 <li>To reduce the noise term, you need more data, better data collection, and more accurate measurements</li>
 </ul>
 <p><strong>To decrease bias and variance, however, we must tune the complexity of our models.</strong></p>

@@ -91,7 +91,7 @@
     url: /04/04_introML
   - title: "Sklearn starter kit"
     url: /04/05_sklearn
-  - title: "Preprocessing and the Cardinal Sin"
+  - title: "Preprocessing, The Cardinal Sin, and Pipes"
     url: /04/06_preprocessing
 
 #    subsections:
